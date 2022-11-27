@@ -19,7 +19,10 @@ let calculator = {
         
     },
 }
-
+function correctList() {
+    buffer = buffer.map( (value) => value.toString() );
+    console.log(buffer);
+}
 function takeSign(target) {
     let sign = target.textContent.replace(/\s/g,'');
     if ( sign == '×' ) sign = '*';
@@ -29,9 +32,9 @@ function takeSign(target) {
     return sign
 }
 function additionButtons(sign) {
-    if ( sign == '=' ) {buffer.push(+elemScreen.textContent); doCalc()
+    if ( sign == '=' ) {correctList(); doCalc()
     }else if ( sign == 'C' ) { buffer = []; elemScreen.textContent = '0'
-    }else if ( sign == '←' ) {  elemScreen.textContent = '0' 
+    }else if ( sign == '←' ) {  
     }
 };
 function doCalc() {
@@ -63,7 +66,7 @@ function doCalc() {
 
         }
         elemScreen.textContent = +buffer[0].toFixed(3);
-        buffer = [];
+
         return;
     };
     id = setTimeout( () => elemScreen.textContent = 'Error!' );
@@ -77,29 +80,22 @@ function clickButton(event) {
     if ( target.tagName != 'BUTTON' ) return;
     if ( !isNaN(+target.textContent)) {
         if ( +elemScreen.textContent === 0 ) {
-            elemScreen.textContent = +target.textContent
+            buffer = []
+            buffer.push( +target.textContent )
         }else{
-            elemScreen.textContent += +target.textContent;
+            buffer.push( +target.textContent )
         }
     }else {
         sign = takeSign(target);
-        let number =  +elemScreen.textContent;
         if ( sign == 'C' || sign == '←' || sign == '=') {
             additionButtons(sign); 
         }else {
-            if ( typeof buffer.slice(-1)[0] == 'string' && sign == '-'  ) {
-                buffer.push( -number );
-                elemScreen.textContent = '-';
-                buffer.splice(buffer.indexOf(-number - 1,1));
-            }else {
-                buffer.push(number);
-                buffer.push(sign);
-                elemScreen.textContent = '0';
-            }
-            
-        }
-       
+            if (typeof buffer.slice(-1)[0] == 'string' && buffer.slice(-1)[0] != '-' && sign == '-' ){
+            buffer.push(sign);
+        }else if ( typeof buffer.slice(-1)[0] != 'string' ) {buffer.push(sign)}
+        }  
     }
+    elemScreen.textContent = buffer.join('');
 }
 
 document.querySelector('.calc-buttons').addEventListener('click',clickButton)

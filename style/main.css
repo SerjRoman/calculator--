@@ -47,6 +47,7 @@ body {
     padding: 20px;
     text-align: right;
     width: 326px;
+    height: 89px;
 }
 .calc-button-row {
     display: flex;
